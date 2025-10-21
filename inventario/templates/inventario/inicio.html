@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica Veterinaria - Sistema de Inventario</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+        
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #667eea !important;
+        }
+        
+        .hero {
+            padding: 60px 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hero p {
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+        
+        .badge-demo {
+            display: inline-block;
+            background: #ffc107;
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .section-title {
+            color: #667eea;
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+        
+        .feature-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .feature-box h4 {
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .feature-box p {
+            color: #555;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        .buttons-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .btn-custom {
+            padding: 14px 35px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        
+        .btn-secondary-custom {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary-custom:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .info-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+        
+        .info-card h5 {
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .info-card p {
+            color: #666;
+            font-size: 0.95em;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+        <div class="container">
+            <span class="navbar-brand">🏥 Clínica Veterinaria</span>
+            <span class="ms-auto">
+                <small class="text-muted">Sistema de Gestión de Inventario v1.0</small>
+            </span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="badge-demo">📋 PROYECTO DE TITULACIÓN - DEMO</div>
+            <h1>Sistema de Gestión de Inventario</h1>
+            <p>Clínica Veterinaria - Prototipo Funcional</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Descripción del Proyecto -->
+        <section class="content-section">
+            <h2 class="section-title">Acerca del Proyecto</h2>
+            
+            <p style="font-size: 1.1em; color: #555; line-height: 1.8; margin-bottom: 25px;">
+                Este es un <strong>proyecto de titulación</strong> que presenta un <strong>prototipo funcional</strong> 
+                de un sistema de gestión de inventario para una clínica veterinaria. El objetivo principal es demostrar 
+                las capacidades de desarrollo web moderno y servir como <strong>base sólida para futuras implementaciones</strong> 
+                y mejoras.
+            </p>
+            
+            <p style="font-size: 1em; color: #666; line-height: 1.8; background: #fff3cd; padding: 20px; border-left: 4px solid #ffc107; border-radius: 5px;">
+                <strong>⚠️ Aclaración Importante:</strong> Este sistema es un <strong>demo/prototipo</strong> 
+                y <strong>no está implementado en producción</strong>. Está diseñado como una prueba de concepto 
+                y base arquitectónica para futuros desarrollos reales.
+            </p>
+            
+            <div class="info-grid" style="margin-top: 30px;">
+                <div class="info-card">
+                    <h5>🎯 Objetivo</h5>
+                    <p>Demostrar conocimientos en desarrollo web full-stack</p>
+                </div>
+                <div class="info-card">
+                    <h5>🔧 Base Técnica</h5>
+                    <p>Estructura lista para expansión y escalabilidad</p>
+                </div>
+                <div class="info-card">
+                    <h5>📈 Futuro</h5>
+                    <p>Plantilla para implementación real futura</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Características del Sistema -->
+        <section class="content-section">
+            <h2 class="section-title">Características del Sistema</h2>
+            
+            <div class="feature-box">
+                <h4>📦 Gestión de Productos</h4>
+                <p>Administración completa de productos con categorías, precios, códigos de identificación y estados de disponibilidad.</p>
+            </div>
+            
+            <div class="feature-box">
+                <h4>📊 Control de Stock</h4>
+                <p>Monitoreo en tiempo real de existencias, alertas de stock bajo y próximos a vencer, y registro de movimientos.</p>
+            </div>
+            
+            <div class="feature-box">
+                <h4>👥 Gestión de Proveedores</h4>
+                <p>Base de datos de proveedores con información de contacto e historial de suministros.</p>
+            </div>
+            
+            <div class="feature-box">
+                <h4>📋 Categorías</h4>
+                <p>Clasificación organizada de productos por tipo (medicinas, equipos, suministros, etc.).</p>
+            </div>
+            
+            <div class="feature-box">
+                <h4>🔐 Panel Administrativo</h4>
+                <p>Interfaz segura para gestionar usuarios, permisos y configuraciones del sistema.</p>
+            </div>
+            
+            <div class="feature-box">
+                <h4>⚙️ API REST</h4>
+                <p>Interfaz programática para integración con otros sistemas futuros.</p>
+            </div>
+        </section>
+
+        <!-- Tecnologías Utilizadas -->
+        <section class="content-section">
+            <h2 class="section-title">Stack Tecnológico</h2>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <h5>Backend</h5>
+                    <p>Django 5.2<br>Django REST Framework<br>Python 3.x</p>
+                </div>
+                <div class="info-card">
+                    <h5>Frontend</h5>
+                    <p>HTML5<br>Bootstrap 5<br>CSS3</p>
+                </div>
+                <div class="info-card">
+                    <h5>Base de Datos</h5>
+                    <p>SQLite (desarrollo)<br>PostgreSQL (recomendado para producción)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Acceso al Sistema -->
+        <section class="content-section" style="text-align: center;">
+            <h2 class="section-title">Acceso al Sistema</h2>
+            
+            <p style="color: #666; margin: 20px 0; font-size: 1.05em;">
+                Selecciona el área que deseas explorar:
+            </p>
+            
+            <div class="buttons-section">
+                <a href="{% url 'productos-lista' %}" class="btn-custom btn-primary-custom">
+                    📦 Ver Inventario
+                </a>
+                <a href="{% url 'admin:index' %}" class="btn-custom btn-secondary-custom">
+                    ⚙️ Panel Administrativo
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p><strong>Sistema de Gestión de Inventario - Clínica Veterinaria</strong></p>
+            <p>Proyecto de Titulación | Prototipo Funcional v1.0</p>
+            <p style="font-size: 0.85em; margin-top: 10px; opacity: 0.8;">
+                © 2025 - Este es un proyecto académico y no está destinado para uso en producción
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

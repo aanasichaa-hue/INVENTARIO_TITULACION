@@ -1,0 +1,242 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario - Clínica Veterinaria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #2c5aa0 !important;
+        }
+        .card-stat {
+            border-left: 4px solid #2c5aa0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .badge-vence {
+            background-color: #dc3545;
+            animation: pulse 2s infinite;
+        }
+        .badge-bajo {
+            background-color: #ffc107;
+            color: #000;
+        }
+        .table-hover tbody tr:hover {
+            background-color: #f1f3f5;
+        }
+        .estado-vencido {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .estado-proximo {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        .estado-ok {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container-fluid">
+            <span class="navbar-brand">
+                <i class="fas fa-clinic-medical"></i> Clínica Veterinaria - Inventario
+            </span>
+            <div class="ms-auto">
+                <a href="/admin/" class="btn btn-sm btn-outline-primary me-2">
+                    <i class="fas fa-cog"></i> Admin
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        <!-- Alertas de Stock -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card card-stat">
+                    <div class="card-body">
+                        <h6 class="card-title text-muted">Total de Productos</h6>
+                        <h2 class="text-primary">{{ total_productos }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-stat">
+                    <div class="card-body">
+                        <h6 class="card-title text-muted">Stock Bajo</h6>
+                        <h2 class="text-warning">{{ stock_bajo }}</h2>
+                        <small class="text-muted">(Menos de 10 unidades)</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-stat">
+                    <div class="card-body">
+                        <h6 class="card-title text-muted">Próximos a Vencer</h6>
+                        <h2 class="text-danger">{{ proximamente_vencen }}</h2>
+                        <small class="text-muted">(En 30 días)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-6">
+                        <input type="text" name="busqueda" class="form-control" 
+                               placeholder="Buscar por nombre o código..."
+                               value="{{ request.GET.busqueda }}">
+                    </div>
+                    <div class="col-md-4">
+                        <select name="categoria" class="form-select">
+                            <option value="">Todas las categorías</option>
+                            {% for cat in categorias %}
+                                <option value="{{ cat.id }}" 
+                                        {% if cat.id == categoria_seleccionada %}selected{% endif %}>
+                                    {{ cat.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tabla de Productos -->
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Productos en Inventario</h5>
+                <a href="/admin/inventario/producto/add/" class="btn btn-sm btn-success">
+                    <i class="fas fa-plus"></i> Agregar Producto
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Existencias</th>
+                            <th>Precio</th>
+                            <th>Vencimiento</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for producto in productos %}
+                        <tr>
+                            <td><code>{{ producto.codigo }}</code></td>
+                            <td>{{ producto.nombre }}</td>
+                            <td><span class="badge bg-info">{{ producto.categoria.nombre }}</span></td>
+                            <td>
+                                {% if producto.existencias < 10 %}
+                                    <span class="badge badge-bajo">{{ producto.existencias }} u.</span>
+                                {% else %}
+                                    <strong>{{ producto.existencias }}</strong> u.
+                                {% endif %}
+                            </td>
+                            <td>${{ producto.precio_venta }}</td>
+                            <td>
+                                {% if producto.fecha_vencimiento %}
+                                    {{ producto.fecha_vencimiento|date:"d/m/Y" }}
+                                {% else %}
+                                    <span class="text-muted">N/A</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if producto.fecha_vencimiento %}
+                                    {% now "Y-m-d" as today %}
+                                    {% if producto.fecha_vencimiento|date:"Y-m-d" < today %}
+                                        <span class="estado-vencido">
+                                            <i class="fas fa-times-circle"></i> Vencido
+                                        </span>
+                                    {% elif producto.fecha_vencimiento|date:"Y-m-d" <= dias_limite %}
+                                        <span class="estado-proximo">
+                                            <i class="fas fa-exclamation-triangle"></i> Próx. Vencer
+                                        </span>
+                                    {% else %}
+                                        <span class="estado-ok">
+                                            <i class="fas fa-check-circle"></i> OK
+                                        </span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="estado-ok">
+                                        <i class="fas fa-check-circle"></i> OK
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="/admin/inventario/producto/{{ producto.id }}/change/" 
+                                   class="btn btn-sm btn-warning" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="/admin/inventario/producto/{{ producto.id }}/delete/" 
+                                   class="btn btn-sm btn-danger" title="Eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center text-muted py-4">
+                                No hay productos registrados
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Paginación -->
+        {% if is_paginated %}
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">Primera</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
