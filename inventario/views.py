@@ -55,12 +55,55 @@ class ProveedorViewSet(viewsets.ModelViewSet):
     queryset = Proveedor.objects.all()
     serializer_class = ProveedorSerializer
 
-    # ========== VISTAS PARA TEMPLATES HTML ==========
+# ========== VISTAS PARA TEMPLATES HTML ==========
 from django.views.generic import ListView, DetailView
 from datetime import datetime, timedelta
 
 def productos_lista(request):
-    productos = Producto.objects.all()
-    return render(request, 'inventario/productos_lista.html', {'productos': productos})
+    from datetime import datetime, timedelta
+    
+    # Obtener todos los productos
+    productos = Producto.objects.select_related('categoria').all()
+    
+    # Filtros de búsqueda
+    busqueda = request.GET.get('busqueda', '')
+    categoria_id = request.GET.get('categoria', '')
+    
+    if busqueda:
+        productos = productos.filter(
+            models.Q(nombre__icontains=busqueda) | 
+            models.Q(codigo__icontains=busqueda)
+        )
+    
+    if categoria_id:
+        productos = productos.filter(categoria_id=categoria_id)
+    
+    # Calcular estadísticas
+    total_productos = productos.count()
+    stock_bajo = productos.filter(stock__lte=models.F('stock_minimo')).count()
+    
+    # Productos próximos a vencer (30 días)
+    fecha_limite = datetime.now().date() + timedelta(days=30)
+    proximamente_vencen = productos.filter(
+        fecha_vencimiento__isnull=False,
+        fecha_vencimiento__lte=fecha_limite,
+        fecha_vencimiento__gte=datetime.now().date()
+    ).count()
+    
+    # Obtener todas las categorías para el filtro
+    categorias = Categoria.objects.all()
+    
+    context = {
+        'productos': productos,
+        'total_productos': total_productos,
+        'stock_bajo': stock_bajo,
+        'proximamente_vencen': proximamente_vencen,
+        'categorias': categorias,
+        'categoria_seleccionada': int(categoria_id) if categoria_id else None,
+        'dias_limite': fecha_limite,
+    }
+    
+    return render(request, 'inventario/productos_lista.html', context)
+
 def inicio(request):
     return render(request, 'inventario/inicio.html')

@@ -148,10 +148,10 @@
                             <td>{{ producto.nombre }}</td>
                             <td><span class="badge bg-info">{{ producto.categoria.nombre }}</span></td>
                             <td>
-                                {% if producto.existencias < 10 %}
-                                    <span class="badge badge-bajo">{{ producto.existencias }} u.</span>
+                                {% if producto.stock <= producto.stock_minimo %}
+                                    <span class="badge badge-bajo">{{ producto.stock }} unidades</span>
                                 {% else %}
-                                    <strong>{{ producto.existencias }}</strong> u.
+                                    <strong>{{ producto.stock }}</strong> unidades
                                 {% endif %}
                             </td>
                             <td>${{ producto.precio_venta }}</td>
